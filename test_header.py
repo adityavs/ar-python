@@ -18,16 +18,14 @@ class HeaderTest(unittest.TestCase):
         self.assertEqual(len(data), 1186)
         f.close()
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+    def test_get_header_bytes(self):
+        header = Header("LICENSE", 1525176954, 502, 20, "100644", 1074, '`\n')
+        data = Header.get_header_bytes(header)
+        f = open('test.a')
+        expected_data = f.read()
+        expected_data = expected_data[8:68]
+        self.assertEqual(data, expected_data)
+        f.close()
 
 if __name__ == '__main__':
     unittest.main()

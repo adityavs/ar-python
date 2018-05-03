@@ -39,3 +39,24 @@ class Header(object):
         ending = data[58:60]
 
         return (Header(file_identifier, modification_time, owner_id, group_id, file_mode, file_size, ending), data[60:])
+
+    def add_padding(self, data, padding_start, padding_end):
+        while padding_start < padding_end:
+            data.append(' ')
+            padding_start = padding_start + 1
+
+    def get_header_bytes(header):
+        data = list(header.get_file_identifier())
+        header.add_padding(data, len(data), 16)
+        data.extend(list(str(header.get_modification_time())))
+        header.add_padding(data, len(data), 28)
+        data.extend(list(str(header.get_owner_id())))
+        header.add_padding(data, len(data), 34)
+        data.extend(list(str(header.get_group_id())))
+        header.add_padding(data, len(data), 40)
+        data.extend(list(header.get_file_mode()))
+        header.add_padding(data, len(data), 48)
+        data.extend(list(str(header.get_file_size())))
+        header.add_padding(data, len(data), 58)
+        data.extend(list(str(header.get_ending())))
+        return ''.join(data)
